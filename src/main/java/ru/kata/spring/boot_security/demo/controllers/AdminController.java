@@ -1,0 +1,78 @@
+package ru.kata.spring.boot_security.demo.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.services.RoleService;
+import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.valid.UserValidator;
+
+import javax.validation.Valid;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+
+    private final UserValidator userValidator;
+    private UserService userService;
+    private final RoleService roleService;
+
+    @Autowired
+    public AdminController(UserValidator userValidator, UserService userService, RoleService roleService) {
+        this.userValidator = userValidator;
+        this.userService = userService;
+        this.roleService = roleService;
+    }
+
+    @GetMapping()
+    public String showUsers(Model model) {
+        model.addAttribute("allUsers", userService.showUsers());
+        return "admin";
+    }
+
+    @PostMapping("/{id}")
+    public String deleteUser(@RequestParam(required = true, defaultValue = "") Long userId,
+                             @RequestParam(required = true, defaultValue = "") String action,
+                             Model model) {
+        if (action.equals("delete")) {
+            userService.deleteUser(userId);
+        }
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                         @PathVariable("id") Long id, @RequestParam("selectedRole") String[] selectedRole) {
+        if (bindingResult.hasErrors()) {
+            return "admin/edit";
+        }
+        userService.updateUser(user);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/new")
+    public String registration(Model model) {
+        model.addAttribute("userForm", new User());
+        return "new";
+    }
+
+    @PostMapping("/new")
+    public String addUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
+        userValidator.validate(userForm, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return "new";
+        }
+        userService.saveUser(userForm);
+        return "redirect:/admin";
+    }
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>$Title$</title>
+</head>
+<body>
+<table style="border: 1px solid grey;
+              width: 600px"
+       th:each="user : ${allUsers}">
+  <tr>
+    <td style="width: 84px" th:text="${user.getUserame()}"> user</td>
+    <td style="width: 84px" th:text="${user.getEmail()}"> userEmail</td>
+    <td style="width: 84px" th:text="${user.getPassword()}"> userPassword</td>
+    <td style="width: 84px" th:text="${user.getRoleSet()}"> userRoleSet</td>
+    <td style="width: 84px">
+      <form th:href="@{/admin/{id}/edit(id=${user.getId()})}">
+        <input type="submit" value="Edit"/>
+      </form>
+    </td>
+    <td style="width: 84px">
+      <form th:method="DELETE" th:action="@{/admin/{id}/delete(id=${user.getId()})}">
+        <input type="submit" value="Delete"/>
+      </form>
+    </td>
+  </tr>
+</table>
+<br/>
+<hr/>
+<a href="/new">Create new user</a>
+<br/>
+<hr/>
+<a href="/logout">Logout</a>
+</body>
+</html>
