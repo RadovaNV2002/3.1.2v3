@@ -49,27 +49,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
-
-    // аутентификация inMemory
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("user")
-                        .roles("USER")
-                        .build();
-        UserDetails admin =
-                User.builder()
-                        .username("admin")
-                        .password("admin")
-                        .roles("ADMIN")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
-    }
-
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
