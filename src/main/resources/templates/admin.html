@@ -9,17 +9,16 @@
               width: 600px"
        th:each="user : ${allUsers}">
   <tr>
-    <td style="width: 84px" th:text="${user.getUserame()}"> user</td>
+    <td style="width: 84px" th:text="${user.getUsername()}"> user</td>
     <td style="width: 84px" th:text="${user.getEmail()}"> userEmail</td>
-    <td style="width: 84px" th:text="${user.getPassword()}"> userPassword</td>
-    <td style="width: 84px" th:text="${user.getRoleSet()}"> userRoleSet</td>
+    <td style="width: 84px" th:text="${user.getRoles()}"> userRoleSet</td>
     <td style="width: 84px">
-      <form th:href="@{/admin/{id}/edit(id=${user.getId()})}">
+      <form th:method="GET" th:action="@{/edit/{id}(id=${user.getId()})}">
         <input type="submit" value="Edit"/>
       </form>
     </td>
     <td style="width: 84px">
-      <form th:method="DELETE" th:action="@{/admin/{id}/delete(id=${user.getId()})}">
+      <form th:method="POST" th:action="@{/admin/delete/{id}(id=${user.getId()})}">
         <input type="submit" value="Delete"/>
       </form>
     </td>

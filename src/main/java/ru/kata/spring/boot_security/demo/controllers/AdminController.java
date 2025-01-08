@@ -5,15 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 import ru.kata.spring.boot_security.demo.valid.UserValidator;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
 
     private final UserValidator userValidator;
@@ -27,35 +28,32 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping()
+    @GetMapping("/admin")
     public String showUsers(Model model) {
         model.addAttribute("allUsers", userService.showUsers());
         return "admin";
     }
 
-    @PostMapping("/{id}")
-    public String deleteUser(@RequestParam(required = true, defaultValue = "") Long userId,
-                             @RequestParam(required = true, defaultValue = "") String action,
-                             Model model) {
-        if (action.equals("delete")) {
-            userService.deleteUser(userId);
-        }
+    @PostMapping("/admin/delete/{id}")
+    public String deleteUser(@PathVariable(value = "id") Long userId) {
+        userService.deleteUser(userId);
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("user", userService.findById(id).orElse(null));
         model.addAttribute("roles", roleService.getAllRoles());
         return "edit";
     }
 
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-                         @PathVariable("id") Long id, @RequestParam("selectedRole") String[] selectedRole) {
+    @PatchMapping("/edit/{id}")
+    public String edit(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                         @PathVariable("id") Long id, @RequestParam("selectedRole") Collection<Role> selectedRole) {
         if (bindingResult.hasErrors()) {
-            return "admin/edit";
+            return "edit";
         }
+        user.setRoles(selectedRole);
         userService.updateUser(user);
         return "redirect:/admin";
     }

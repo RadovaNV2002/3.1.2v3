@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>New User</title>
 </head>
 <body>
 <h1>New User</h1>
-<form th:method="POST" th:action="@{/auth/new}" th:object="${user}">
+<form th:method="POST" th:action="@{/new}" th:object="${userForm}">
     <label for="username">Username</label>
     <input type="text" th:field="*{username}" id="username">
     </br>
