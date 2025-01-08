@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+<!--      xmlns="http://www.w3.org/1999/html">-->
 <head>
     <meta charset="UTF-8">
     <title>New User</title>
@@ -15,6 +16,13 @@
     </br>
     <label for="password">Password</label>
     <input type="password" th:field="*{password}" id="password">
+    </br>
+    <label for="selectedRole">Select role: </label>
+    <select multiple id="selectedRole" name="selectedRole">
+        <option th:each="role : ${roles}" th:value="${role.id}"
+                th:text="${role.name}">
+        </option>
+    </select>
     </br>
     <input type="submit" value="Sign Up!"/>
 </form>

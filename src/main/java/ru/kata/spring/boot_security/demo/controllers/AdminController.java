@@ -60,16 +60,18 @@ public class AdminController {
 
     @GetMapping("/new")
     public String registration(Model model) {
+        model.addAttribute("roles", roleService.getAllRoles());
         model.addAttribute("userForm", new User());
         return "new";
     }
 
     @PostMapping("/new")
-    public String addUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
+    public String addUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model, @RequestParam("selectedRole") Collection<Role> selectedRole) {
         userValidator.validate(userForm, bindingResult);
         if (bindingResult.hasErrors()) {
             return "new";
         }
+        userForm.setRoles(selectedRole);
         userService.saveUser(userForm);
         return "redirect:/admin";
     }
