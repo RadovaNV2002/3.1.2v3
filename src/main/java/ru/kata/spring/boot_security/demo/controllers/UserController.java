@@ -13,8 +13,7 @@ import java.security.Principal;
 public class UserController {
 
     @GetMapping
-    public String getPageUser(Principal principal) {
-        Authentication a = SecurityContextHolder.getContext().getAuthentication();
-        return principal.getName();
+    public String getPageUser() {
+        return "user";
     }
 }
