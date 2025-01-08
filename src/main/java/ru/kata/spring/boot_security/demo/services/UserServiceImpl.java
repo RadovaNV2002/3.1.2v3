@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
-        User oldUser = findByUsername(user.getUsername());
+        User oldUser = findById(user.getId()).orElse(user);
         if (user.getPassword().isEmpty()) {
             user.setPassword(oldUser.getPassword());
         } else {

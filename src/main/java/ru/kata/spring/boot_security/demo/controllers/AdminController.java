@@ -48,11 +48,8 @@ public class AdminController {
     }
 
     @PatchMapping("/edit/{id}")
-    public String edit(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+    public String update(@ModelAttribute("user") @Valid User user,
                          @PathVariable("id") Long id, @RequestParam("selectedRole") Collection<Role> selectedRole) {
-        if (bindingResult.hasErrors()) {
-            return "edit";
-        }
         user.setRoles(selectedRole);
         userService.updateUser(user);
         return "redirect:/admin";
